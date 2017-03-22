@@ -1,0 +1,15 @@
+&s unit [open year stat -r]
+&if %stat% ne 0 &then &goto noin
+&s yr = [read %unit% stat]
+&s yr = [unquote %yr%]
+&s stat [close %unit%]
+&if %yr% lt 1985 or %yr% gt 2050 &then &goto noin
+&if [exists walkbar -cover] &then kill walkbar
+reselect ../covs/wb walkbar line
+resel iyr le %yr%
+[unquote ' ']
+n
+n
+&label noin
+&type Problem with input file (year)
+&ret

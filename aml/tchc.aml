@@ -1,0 +1,220 @@
+&if [show workspace] cn covs &then &ret This aml cannot be run in your covs directory
+&s yfile =  xx
+&if [exists year -file] &then &s yfile = year
+&if [exists hwyyear -file] &then &s yfile = hwyyear
+&if %yfile% = xx &then &return  Stopping ... year file not found
+&s unit [open %yfile% stat -r]
+&if %stat% ne 0 &then &goto noyear
+&s .yr = [read %unit% stat]
+&s .yr = [unquote %.yr%]
+&s stat [close %unit%]
+&s net =  xx
+&if [exists ..\covs\tcov -cover] &then &s net = ..\covs\tcov
+&if [exists tcov -cover] &then &s net = tcov
+&if %net% = xx &then &return  Stopping ... tcov not found
+&if not [exists ttcov -cover] &then &goto nottcov
+kill ttcov
+&label nottcov
+copy %net% ttcov
+dropfeatures ttcov route.transit geometry
+dropfeatures ttcov route.ed geometry
+dropfeatures ttcov route.cmp geometry
+dropfeatures ttcov route.hov geometry
+dropfeatures ttcov section.transit geometry
+dropfeatures ttcov section.ed geometry
+dropfeatures ttcov section.cmp geometry
+dropfeatures ttcov section.hov geometry
+&sys ..\fortran\tchc1
+&if [exists hwycov -cover] &then kill hwycov all
+copy ttcov hwycov
+kill ttcov all
+idedit hwycov line
+joinitem hwycov.aat ..\data\info!arc!aat1 hwycov.aat hwycov# imed link
+pullitems hwycov.aat hwycov.aat
+fnode#
+tnode#
+lpoly#
+rpoly#
+length
+hwycov#
+hwycov-id
+qid
+ccstyle
+uvol
+avol
+tmp1
+tmp2
+plot
+sphere
+rtno
+lkno
+nm
+fxnm
+txnm
+an
+bn
+cojur
+costat
+coloc
+rloop
+adtlk
+adtvl
+pkpct
+trpct
+secno
+dir
+ffc
+class
+aspd
+iyr
+iproj
+ijur
+ifc
+ihov
+itruck
+ispd
+itspd
+iway
+imed
+cost
+itollo
+itolla
+itollp
+ablno
+ablna
+ablnp
+abau
+abpct
+abphf
+abcnt
+abtl
+abrl
+abll
+abtlb
+abrlb
+abllb
+abgc
+abplc
+abcpo
+abcpa
+abcpp
+abcxo
+abcxa
+abcxp
+abcho
+abcha
+abchp
+abtmo
+abtma
+abtmp
+abtxo
+abtxa
+abtxp
+abcst
+abvla
+abvlp
+ablos
+balno
+balna
+balnp
+baau
+bapct
+baphf
+bacnt
+batl
+barl
+ball
+bagc
+baplc
+bacpo
+bacpa
+bacpp
+bacxo
+bacxa
+bacxp
+bacho
+bacha
+bachp
+batmo
+batma
+batmp
+batxo
+batxa
+batxp
+bacst
+bavla
+bavlp
+balos
+end
+joinitem hwycov.aat ..\data\info!arc!aat2 hwycov.aat hwycov# ball link
+pullitems hwycov.nat hwycov.nat
+arc#
+hwycov#
+hwycov-id
+xnm1
+xnm2
+temp
+x-coord
+y-coord
+z-coord
+iucnt
+sphere 
+hnode
+iyr
+ijur
+icnt
+end
+&if [exists xcov -cover] &then kill xcov all
+rename hwycov xcov
+reselect xcov hwycov line
+resel ifc lt 11
+[unquote ' ']
+n
+y
+asel ifc eq 14
+[unquote ' ']
+n
+y
+resel iyr le %.yr%
+[unquote ' ']
+n
+n
+kill xcov all
+renode hwycov
+&data arc info
+ARC
+SEL HWYCOV.AAT
+RESEL IFC = 1
+CA COSTAT = RLOOP
+Q STOP
+&END
+&if [exists nofwycov -cover] &then kill nofwycov all
+reselect hwycov nofwycov line
+resel ifc ne 1 and ifc ne 8 and ifc ne 10 
+[unquote ' ']
+n
+y
+resel ifc ne 9 or ijur ne 1
+[unquote ' ']
+n
+n
+&if [exists fwycov1 -cover] &then kill fwycov1 all
+&if [exists fwycov2 -cover] &then kill fwycov2 all
+&if [exists sbebfwycov1 -cover] &then kill sbebfwycov1 all
+&if [exists sbebfwycov2 -cover] &then kill sbebfwycov2 all
+reselect hwycov fwycov1 line
+resel ifc = 1 and ihov ne 2 and ihov ne 3 and nm nc 'AUXIL'
+[unquote ' ']
+n
+n
+copy fwycov1 fwycov2
+reselect fwycov1 sbebfwycov1 line
+resel nm cn 'SB' or nm cn 'EB'
+[unquote ' ']
+n
+n
+copy sbebfwycov1 sbebfwycov2
+turntable hwycov 200 # nouturns
+&sys ..\fortran\tchc
+&s x = [delete hwycov.e00 -file]
+export cover hwycov hwycov

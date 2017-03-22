@@ -1,0 +1,134 @@
+/* Modified 03/30/10 by MCA
+/* 
+&severity &error &ignore
+&if [exists xx_postarc_is_running -file] &then &s x = [delete xx_postarc_is_running -file]
+&s x=[open xx_postarc_is_running openstatus -write]
+&s x=[close -all]
+&s zc =  xx
+&if [exists ../covs/zones -cover] &then &s zc ../covs/zones
+&if [exists zones -cover] &then &s zc zones
+&if %zc% = xx &then &return  Stopping ... zones not found
+&s sph =  xx
+&if [exists ../covs/sphere -cover] &then &s sph ../covs/sphere
+&if [exists sphere -cover] &then &s sph sphere
+&if %sph% = xx &then &return  Stopping ... sphere not found
+&s fz4 =  xx
+&if [exists ../covs/farezone4 -cover] &then &s fz4 ../covs/farezone4
+&if [exists farezone4 -cover] &then &s fz4 farezone4
+&if %fz4% = xx &then &return  Stopping ... farezone4 not found
+&s ln =  xx
+&if [exists ../covs/lname -cover] &then &s ln ../covs/lname
+&if [exists lname -cover] &then &s ln lname
+&if %ln% = xx &then &return  Stopping ... lname not found
+&s elev =  xx
+&if [exists T:/data/gis/covs/misc/elev10grd -grid] &then &s elev T:/data/gis/covs/misc/elev10grd
+&if [exists ../covs/elev10grd -grid] &then &s elev ../covs/elev10grd
+&if [exists elev10grd -grid] &then &s elev elev10grd
+&if %elev% = xx &then &return  Stopping ... elev10grd not found
+&if not [exists tcoved -cover] &then &return no tcoved
+&if not [exists trinfo -info] &then &return notrinfo
+&if not [exists tcov -cover] &then &goto notcov
+&if [exists tcovbu -cover] &then kill tcovbu all
+rename tcov tcovbu
+&label notcov
+&if [exists tcovedbu -cover] &then kill tcovedbu all
+copy tcoved tcovedbu
+copy tcoved tcov
+kill tcoved all
+renode tcov
+&if [exists tnode -cover] &then kill tnode all
+nodepoint tcov tnode
+addxy tnode point
+build tnode point
+latticespot %elev% tnode
+&if [exists nodeid -cover] &then kill nodeid all
+identity tnode %sph% nodeid point
+&if [exists zoneid -cover] &then kill zoneid all
+&label nozoneid
+identity nodeid %zc% zoneid point
+kill nodeid all
+&if [exists fz4id -cover] &then kill fz4id all
+&label nofz4id
+identity zoneid %fz4% fz4id point
+kill zoneid all
+pullitems fz4id.pat fz4id.pat
+tnode#
+x-coord
+y-coord
+spot
+sphereno
+zone
+farezone4
+end
+/*additem fz4id.pat fz4id.pat i2 2 4 b 0
+&if [exists stanear -cover] &then kill stanear all
+&if [exists staarc -cover] &then kill staarc all
+reselect tcov staarc line
+resel costat in {1->9999} or rloop in {1->9999}
+[unquote ' ']
+n
+y
+resel cojur in {1->20} and ihov ne 2 and iyr < 2005
+[unquote ' ']
+n
+n
+near costat staarc line 200 stanear
+&data arc info
+ARC
+SEL STANEAR.PAT
+CA $NM = 1
+RELATE STAARC.AAT STAARC# ORDERED NUMERIC
+RESEL STAARC# = $1STAARC#
+CA TCOV-ID = $1STAARC-ID
+Q STOP
+&END
+&if [exists staarc -cover] &then kill staarc all
+pullitems stanear.pat stanear.pat
+area
+perimeter
+stanear#
+stanear-id
+cojur
+costat
+tcov-id
+status
+end
+near %ln% tcov node 100
+&if [exists complete -file] &then &s x = [delete complete -file]
+&sys ..\fortran\postarc
+idedit tcov line
+build tcov line
+build tcov node
+copy tcov tcoved
+&if [exists tnode -cover] &then kill tnode all
+&if [exists nodeid -cover] &then kill nodeid all
+/*&if [exists fz4id -cover] &then kill fz4id all
+&if [exists ttcov -cover] &then kill ttcov all
+&if [exists stanear -cover] &then kill stanear all
+
+&sys ..\fortran\posttr
+ae
+display 0
+edit tcoved
+editf section.transit
+sel tmp2 = 9
+&if [show number select] lt 1 &then &goto none
+delete
+save y
+q
+&sys ..\fortran\posttr
+&ret
+&label none
+save y
+/*added by ZOU to check for zone split 
+editc zones
+editf poly
+sel zone > 5000
+&if [show number select] gt 0 &then &goto subarea
+q
+&if [exists xx_postarc_is_running -file] &then &s x = [delete xx_postarc_is_running -file]
+&ret
+&label subarea
+q
+&if [exists xx_postarc_is_running -file] &then &s x = [delete xx_postarc_is_running -file]
+&ret

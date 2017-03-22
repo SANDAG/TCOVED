@@ -1,0 +1,462 @@
+&if [show workspace] cn covs &then &ret This aml cannot be run in your covs directory
+&s x =  [delete trstop.DCB -file]
+&s x =  [delete trlink.DCB -file]
+&s x =  [delete trrt.DCB -file]
+&s x =  [copy ../data/trstop.DCB trstop.DCB -file]
+&s x =  [copy ../data/trlink.DCB trlink.DCB -file]
+&s x =  [copy ../data/trrt.DCB trrt.DCB -file]
+&s x =  [delete tctrfreeflow.prold -file]
+&s x =  [delete tctrfreeflow.sumold -file]
+&s x =  [delete tctrcongest.prold -file]
+&s x =  [delete tctrcongest.sumold -file]
+&s x =  [copy tctrfreeflow.pr tctrfreeflow.prold -file]
+&s x =  [copy tctrfreeflow.sum tctrfreeflow.sumold -file]
+&s x =  [copy tctrcongest.pr tctrcongest.prold -file]
+&s x =  [copy tctrcongest.sum tctrcongest.sumold -file]
+&s net =  xx
+&s x =  [delete trinfo -info]
+&if [exists ../covs/tcoved -cover] &then &s net ../covs/tcoved
+&if [exists tcoved -cover] &then &s net tcoved
+&if %net% = xx &then &return  Stopping ... tcoved not found
+&if [exists ttcov -cover] &then kill ttcov all
+copy %net% ttcov
+&label continue
+&if [exists prcov -cover] &then &goto continue2
+&return  Stopping ... prcov not found
+&label continue2
+dropfeatures ttcov route.turns geometry
+dropfeatures ttcov route.hov geometry
+dropfeatures ttcov route.ed geometry
+dropfeatures ttcov section.turns geometry
+dropfeatures ttcov section.hov geometry
+dropfeatures ttcov section.ed geometry
+&s unit [open year stat -r]
+&if %stat% ne 0 &then &goto noin
+&s yr = [read %unit% stat]
+&s yr = [unquote %yr%]
+&s stat [close %unit%]
+&if %yr% lt 1985 or %yr% gt 2050 &then &goto noin
+&s sph =  xx
+&if [exists ../covs/sphere -cover] &then &s sph ../covs/sphere
+&if [exists sphere -cover] &then &s sph sphere
+&if %sph% = xx &then &return  Stopping ... sphere not found
+&s fz4 =  xx
+&if [exists farezone4 -cover] &then kill farezone4 all
+&if %yr% ge 2008 and %yr% le 2010 &then &if [exists ../covs/farezn08 -cover] &then copy ../covs/farezn08 farezone4
+&if %yr% ge 2011 &then &if [exists ../covs/farezn11 -cover] &then copy ../covs/farezn11 farezone4
+&if [exists farezone4 -cover] &then &s fz4 farezone4
+&if %fz4% = xx &then &return  Stopping ... farezone4 not found
+&sys ..\fortran\tctr1
+&if [exists walkbar -cover] &then kill walkbar
+reselect ../covs/wb walkbar line
+resel iyr le %yr%
+[unquote ' ']
+n
+n
+&if [exists trcov -cover] &then kill trcov
+&if [exists ttrcov -cover] &then kill ttrcov
+reselect ttcov trcov line
+resel tmp1 gt 0
+[unquote ' ']
+n
+n
+copy trcov ttrcov
+&if [exists ntrcov -cover] &then kill ntrcov
+reselect ttcov ntrcov line
+resel tmp1 lt 1 and iyr le %yr% and ifc ne 10
+[unquote ' ']
+n
+n
+kill ttcov
+dropfeatures ntrcov route.transit geometry
+dropfeatures ntrcov section.transit geometry
+dropfeatures ntrcov node
+pullitems ntrcov.aat ntrcov.aat
+FNODE#
+TNODE#
+LPOLY#
+RPOLY#
+LENGTH
+NTRCOV#
+NTRCOV-ID
+NM
+FXNM
+TXNM
+IYR
+IFC
+ISPD
+END
+ae
+display 0
+editc ttrcov
+editf section.transit
+sel tmp2 lt 1
+&s nsel = [show number select]
+&if %nsel% lt 1 &then &goto nosec
+delete
+&label nosec
+save y
+editf route.transit
+sel transit-id lt 1
+&s nsel = [show number select]
+&if %nsel% lt 1 &then &goto norat
+delete
+&label norat
+save y
+editc trcov
+editf section.transit
+sel all
+delete
+save y
+editf route.transit
+sel all
+delete
+save y
+q
+additem trcov.aat trcov.aat fwylen 4 12 f 3 imed
+&data arc info
+ARC
+SEL TRCOV.AAT
+ALTER UYR,SRT1,,,,,,,
+ALTER UPROJ,SRT2,,,,,,,
+ALTER UJUR,SRT3,,,,,,,
+ALTER UFC,SRT4,,,,,,,
+ALTER UHOV,SRT5,,,,,,,
+ALTER USPD,SRT6,,,,,,,
+ALTER UWAY,SRT7,,,,,,,
+ALTER UMED,SRT8,,,,,,,
+ALTER UABLNO,SRT9,,,,,,,
+ALTER UABLNA,SRT10,,,,,,,
+ALTER UABLNP,SRT11,,,,,,,
+ALTER UABAU,SRT12,,,,,,,
+ALTER UABCNT,SRT13,,,,,,,
+ALTER UABTL,SRT14,,,,,,,
+ALTER UABRL,SRT15,,,,,,,
+ALTER UABLL,SRT16,,,,,,,
+ALTER UBALNO,SRT17,,,,,,,
+ALTER UBALNA,SRT18,,,,,,,
+ALTER UBALNP,SRT19,,,,,,,
+ALTER UBAAU,SRT20,,,,,,,
+ALTER XFC,MINMODE,,,,,,,
+ALTER XHOV,LRTZONE,,,,,,,
+RESEL IFC = 1
+CA FWYLEN = LENGTH / 5280
+Q STOP
+&end
+pullitems trcov.aat trcov.aat
+FNODE#
+TNODE#
+LPOLY#
+RPOLY#
+LENGTH
+TRCOV#
+TRCOV-ID
+FX
+FY
+TX
+TY
+TMP1
+TMP2
+SPHERE
+RTNO
+LKNO
+NM
+FXNM
+TXNM
+AN
+BN
+DIR
+OSPD
+IYR
+IJUR
+IFC
+IHOV
+ISPD
+IWAY
+IMED
+FWYLEN
+ABLNO
+ABLNA
+ABLNP
+ABAU
+ABCNT
+ABTL
+ABRL
+ABLL
+ABTMO
+ABTMA
+ABTMP
+ABSTP
+BALNO
+BALNA
+BALNP
+BAAU
+BACNT
+BATL
+BARL
+BALL
+BATMO
+BATMA
+BATMP
+BASTP
+SRT1
+SRT2
+SRT3
+SRT4
+SRT5
+SRT6
+SRT7
+SRT8
+SRT9
+SRT10
+SRT11
+SRT12
+SRT13
+SRT14
+SRT15
+SRT16
+SRT17
+SRT18
+SRT19
+SRT20
+MINMODE
+LRTZONE
+END
+pullitems trcov.nat trcov.nat
+ARC#
+TRCOV#
+TRCOV-ID
+XNM1
+XNM2
+TEMP
+X-COORD
+Y-COORD
+Z-COORD
+IUCNT
+SPHERE 
+HNODE
+IYR
+IJUR
+ICNT
+TAP
+TNODE
+FZONE4
+FZONE6
+FZONE7
+ISTOP
+IPARK
+ITT
+USTOP
+UPARK
+END
+additem trcov.aat trcov.aat vol1 4 6 b 0 trcov-id
+additem trcov.aat trcov.aat vol2 4 6 b 0 vol1
+additem trcov.aat trcov.aat crzone 4 4 b 0
+additem trcov.nat trcov.nat wvol 4 6 b 0
+additem trcov.nat trcov.nat avol 4 6 b 0
+additem trcov.nat trcov.nat xvol 4 6 b 0
+additem trcov.nat trcov.nat tvol 4 6 b 0
+pullitems trcov.sectransit trcov.sectransit
+ROUTELINK#
+ARCLINK#
+F-MEAS
+T-MEAS
+F-POS
+T-POS
+TRANSIT#
+TRANSIT-ID
+TMP2
+TMP4
+SECI2
+END
+joinitem trcov.sectransit ../data/info!arc!trcov.sectransit trcov.sectransit routelink# tmp4 link
+joinitem trcov.rattransit ../data/info!arc!trcov.rattransit trcov.rattransit transit# transit-id link
+renode trcov
+&if [exists tcoved -cover] &then goto skip
+&s x = [delete trinfo -info]
+copyinfo ..\covs\trinfo
+&label skip
+&sys ..\fortran\tctr2
+&if [exists ttrcov -cover] &then kill ttrcov
+&sys ..\fortran\tctr3
+&s x = [delete trcovxy -file]
+addxy trcov node
+&data  arc info
+ARC
+SEL TRCOV.NAT
+OUTPUT ../TRCOVXY INIT
+CA $COMMA-SWITCH = -1
+PRINT X-COORD,Y-COORD
+Q STOP
+&end
+&s x = [delete trcovll -file]
+project file trcovxy trcovll ../data/sp83geogdd.prj
+&s x = [delete trcovll.prj -file]
+&s x = [delete trcovxy -file]
+&if [exists trnode -cover] &then kill trnode all
+nodepoint trcov trnode
+build trnode point
+&if [exists nodeid -cover] &then kill nodeid all
+identity trnode %sph% nodeid point
+&if [exists fz4id -cover] &then kill fz4id all
+identity nodeid %fz4% fz4id point
+kill trnode all
+kill nodeid all
+pullitems fz4id.pat fz4id.pat
+trnode#
+sphereno
+farezone4
+end
+&sys ..\fortran\tctr4
+&s x = [delete trcovll -file]
+&if [exists tapcov -cover] &then kill tapcov all
+&if [exists xfercov -cover] &then kill xfercov all
+generate tapcov
+input tap.gen
+lines
+q
+build tapcov lines
+generate xfercov
+input xfer.gen
+lines
+q
+build xfercov lines
+ae
+display 0
+editc trcov
+ef arc
+nodesnap closest 3
+arcsnap off
+get tapcov
+get xfercov
+get ../covs/cccov
+save
+q
+/*kill tapcov all
+/*kill xfercov all
+/*kill cccov all
+renode trcov
+&sys ..\fortran\tctr4a
+&s x = [delete trcov.e00 -file]
+export cover trcov trcov
+&if [exists idcov1 -cover] &then kill idcov1 all
+nodepoint trcov idcov1
+&if [exists idcov -cover] &then kill idcov all
+reselect idcov1 idcov point
+resel tnode > 0 and istop > 3
+[unquote ' ']
+n
+y
+asel tap > 0 
+[unquote ' ']
+n
+n
+&if [exists idcov1 -cover] &then kill idcov1 all
+identity idcov ..\covs\avrzone idcov1 point
+&if [exists idcov2 -cover] &then kill idcov2 all
+identity idcov1 ..\covs\pseudosra idcov2 point
+&if [exists idcov3 -cover] &then kill idcov3 all
+identity idcov2 ..\covs\trgrid idcov3 point
+&s x = [delete tap.id -file] 
+&s x = [delete tnode.trgrid -file] 
+&data arc info
+ARC
+SEL IDCOV3.PAT
+CA $COMMA-SWITCH = -1
+OUTPUT ../tnode.id INIT
+PRINT TNODE,AVR4,SRA,TRGRID-ID
+OUTPUT ../tnode.trgrid INIT
+PRINT TNODE,TRGRID-ID
+OUTPUT ../tap.trgrid INIT
+RESEL TAP > 0
+PRINT TAP,TRGRID-ID
+Q STOP
+&END
+kill idcov all
+kill idcov1 all
+kill idcov2 all
+kill idcov3 all
+kill tapcov all
+kill ntrcov all
+kill xfercov all
+&if [exists nodecov -cover] &then kill nodecov all
+nodepoint trcov nodecov
+&if [exists tapcov -cover] &then kill tapcov all
+reselect nodecov tapcov point
+resel istop > 3 and tap > 0
+[unquote ' ']
+n
+n
+&s x = [ delete tapcov.shp -file]
+&s x = [ delete tapcov.shx -file]
+&s x = [ delete tapcov.dbf -file]
+&s x = [ delete tapcov.shp.xml -file]
+arcshape tapcov point tapcov
+&if [exists idcov -cover] &then kill idcov all
+&if [exists pntcov -cover] &then kill pntcov all
+&data arc info
+ARC
+SEL PRCOV.PAT
+ALTER TDZ,TAZ,,,,,,,
+RESEL PRCOV# > 1
+CA PRCOV-ID = PRCOV# - 1
+Q STOP
+&END
+idedit prcov
+ae
+display 0
+ec prcov
+ef label
+sel all
+put pntcov
+q
+identity pntcov ..\covs\zones idcov point
+&data arc info
+ARC
+SEL IDCOV.PAT
+ALTER PNTCOV-ID,PRCOV-ID,,,,,,,
+SORT PRCOV-ID
+SEL PRCOV.PAT
+RELATE IDCOV.PAT PRCOV-ID ORDERED NUMERIC
+RESEL PRCOV-ID = $1PRCOV-ID
+CA TAZ = $1ZONE
+Q STOP
+&END
+kill idcov all
+kill pntcov all
+&if [exists nodecov -cover] &then kill nodecov all
+&if [exists idcov -cover] &then kill idcov all
+/*added by ZOU Aug 08
+/*to overlay with trelev to get the elevation in feet for tap
+&s elev =  xx
+&if [exists ../covs/trelev -cover] &then &s elev ../covs/trelev
+&if [exists trelev -cover] &then &s elev trelev
+&if %elev% = xx &then &return  Stopping ... trelev not found
+identity tapcov %elev% idcov point
+&data arc info
+ARC
+SEL IDCOV.PAT
+CA $COMMA-SWITCH = -1
+RESEL ELEV > 0
+OUTPUT ..\tap.elev INIT
+PRINT TAP,ELEV
+Q STOP
+&END
+kill idcov all
+identity tapcov prcov idcov point
+&if [exists tapcov -cover] &then kill tapcov all
+&data arc info
+ARC
+SEL IDCOV.PAT
+CA $COMMA-SWITCH = -1
+OUTPUT ..\tap.ptype INIT
+RESEL PTYPE > 0
+PRINT TAP,PRCOV-ID,PTYPE,TAZ,CAP,WKDIST,ISTOP
+Q STOP
+&END
+/*kill idcov all
+&if [exists fz4id -cover] &then kill fz4id all
+&ret
+&label noin
+&type Problem with input file (year)
+&ret

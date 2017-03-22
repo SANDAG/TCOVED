@@ -1,0 +1,278 @@
+/*settcovtoll.aml
+/*Created On: 06/26/08
+/*Created By: zou
+/*Modified On: 10/22/08
+/*Modified By: jor
+/*MODIFIED BY: mca 03/29/10 for Series 12 incorporation
+/*Modified On: 08/27/10
+/*Modified By: lyu
+/*Purpose: Set toll per mile value for toll/ML facilites as defined in the 2011 RTP
+/*SR-241, SR-11, I-5 Toll, I-15 Toll, I-5 North Coast ML, I-15 ML, SR-52 ML, I-805 ML
+/*Modified By: mca 02/02/11 to include 'tollcalc.aml' for the SR-125 toll road
+/*Modified On: 07/30/13
+/*Modified By: jor 
+/*Purpose:incorporate adjusted CPI tolling rates for sr13 and proposed tolling structure for SR-11
+
+/*ZERO-OUT TOLL FIELDS
+/*&data arc info
+/*ARC
+/*SEL TCOVED.AAT
+/*CA ITOLLO = 0 ; CA ITOLLA = 0; CA ITOLLP = 0
+/*CA UTOLLO = 0 ; CA UTOLLA = 0; CA UTOLLP = 0
+/*CA XTOLLO = 0 ; CA XTOLLA = 0; CA XTOLLP = 0
+/*CA YTOLLO = 0 ; CA YTOLLA = 0; CA YTOLLP = 0
+/*CA ZTOLLO = 0 ; CA ZTOLLA = 0; CA ZTOLLP = 0
+/*Q STOP
+/*&end
+
+/*START TOLL CALCULATIONS
+ae
+disp 0
+editc tcoved
+ef arc
+
+/*SET PRICE VARIABLES
+&s 241peaktoll = 43  /*SR-241 Tollway Peak Price
+&s 241opeaktoll = 35  /*SR-241 Tollway Off-Peak Price
+&s 11peaktoll = 43  /*SR-11 Tollway Peak Price
+&s 11opeaktoll = 35  /*SR-11 Tollway Off-Peak Price
+&s i5tollonlyp = 20  /*I-5 Orange County Tollway Peak Price
+&s i5tollonlyop = 13  /*I-5 Orange County Tollway Off-Peak Price
+&s i15tollonlyp = 20  /*I-15 Riverside County Tollway Peak Price
+&s i15tollonlyop = 13  /*I-15 Riverside County Tollway Off-Peak Price
+&s sr52mlpeaktoll = 34  /*SR-52 Managed Lanes Peak Price
+&s sr52mlopeaktoll = 13  /*SR-52 Managed Lanes Off-Peak Price
+&s i805mlpeaktoll = 34  /*I-805 Managed Lanes Peak Price
+&s i805mlopeaktoll = 13  /*I-805 Managed Lanes Off-Peak Price
+&s i5mlpeaktoll = 34  /*I-5 North Coast Managed Lanes Peak Price
+&s i5mlopeaktoll = 13   /*I-5 North Coast Managed Lanes Off-Peak Price
+&s i15xpresspeak = 46  /*I-15 Express Lanes Peak Price (1988-2012)
+&s i15xpressopeak = 10  /*I-15 Express Lanes Off-Peak Price (1988-2012)
+&s i15mlpeaktoll = 34  /*I-15 Managed Lanes Peak Price (2012-2050)
+&s i15mlopeaktoll = 13   /*I-15 Managed Lanes Off-Peak Price (2012-2050)
+
+/*DELETE SERIES 11 ASPD
+sel ihov = 4 and ifc = 1
+ca aspd = 0
+
+/*SR-125 TOLLWAY
+sel tcoved-id = 9012 ; calc itolla = 45 ; calc itollp = 45 ; calc itollo = 45 ; calc iyr = 2008 ; calc iproj = 117 ; calc ihov = 4
+sel tcoved-id = 33584 ; calc itolla = 101 ; calc itollp = 101 ; calc itollo = 101 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 7303 ; calc itolla = 52 ; calc itollp = 52 ; calc itollo = 52 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 33585 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2020 ; calc iproj = 0 ; calc ihov = 4
+sel tcoved-id = 30782 ; calc itolla = 46 ; calc itollp = 46 ; calc itollo = 46 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 27621 ; calc itolla = 111 ; calc itollp = 111 ; calc itollo = 111 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 19564 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9140 ; calc itolla = 134 ; calc itollp = 134 ; calc itollo = 134 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9141 ; calc itolla = 114 ; calc itollp = 114 ; calc itollo = 114 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9136 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9142 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 3690 ; calc itolla = 102 ; calc itollp = 102 ; calc itollo = 102 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 25364 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 3694 ; calc itolla = 152 ; calc itollp = 152 ; calc itollo = 152 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 7310 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 3703 ; calc itolla = 121 ; calc itollp = 121 ; calc itollo = 121 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9516 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 27652 ; calc itolla = 110 ; calc itollp = 110 ; calc itollo = 110 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9512 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9520 ; calc itolla = 157 ; calc itollp = 157 ; calc itollo = 157 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9513 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9514 ; calc itolla = 145 ; calc itollp = 145 ; calc itollo = 145 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9510 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 31011 ; calc itolla = 105 ; calc itollp = 105 ; calc itollo = 105 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9490 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9497 ; calc itolla = 147 ; calc itollp = 147 ; calc itollo = 147 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9489 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9496 ; calc itolla = 130 ; calc itollp = 130 ; calc itollo = 130 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9488 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 27651 ; calc itolla = 139 ; calc itollp = 139 ; calc itollo = 139 ; calc iyr = 2015 ; calc iproj = 161 ; calc ihov = 4
+sel tcoved-id = 9477 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9476 ; calc itolla = 107 ; calc itollp = 107 ; calc itollo = 107 ; calc iyr = 2015 ; calc iproj = 161 ; calc ihov = 4
+sel tcoved-id = 9474 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9478 ; calc itolla = 136 ; calc itollp = 136 ; calc itollo = 136 ; calc iyr = 2015 ; calc iproj = 161 ; calc ihov = 4
+sel tcoved-id = 9473 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 31012 ; calc itolla = 96 ; calc itollp = 96 ; calc itollo = 96 ; calc iyr = 2030 ; calc iproj = 217 ; calc ihov = 4
+sel tcoved-id = 10241 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 10242 ; calc itolla = 115 ; calc itollp = 115 ; calc itollo = 115 ; calc iyr = 2030 ; calc iproj = 217 ; calc ihov = 4
+sel tcoved-id = 10238 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 10239 ; calc itolla = 214 ; calc itollp = 214 ; calc itollo = 214 ; calc iyr = 2030 ; calc iproj = 217 ; calc ihov = 4
+sel tcoved-id = 31014 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 10231 ; calc itolla = 883 ; calc itollp = 883 ; calc itollo = 883 ; calc iyr = 2030 ; calc iproj = 0 ; calc ihov = 4
+sel tcoved-id = 14026 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 14027 ; calc itolla = 128 ; calc itollp = 128 ; calc itollo = 128 ; calc iyr = 2030 ; calc iproj = 0 ; calc ihov = 4
+sel tcoved-id = 14025 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 27726 ; calc itolla = 828 ; calc itollp = 828 ; calc itollo = 828 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 30983 ; calc itolla = 705 ; calc itollp = 705 ; calc itollo = 705 ; calc iyr = 2013 ; calc iproj = 561 ; calc ihov = 4
+sel tcoved-id = 29143 ; calc itolla = 447 ; calc itollp = 447 ; calc itollo = 447 ; calc iyr = 2013 ; calc iproj = 561 ; calc ihov = 4
+sel tcoved-id = 27727 ; calc itolla = 799 ; calc itollp = 799 ; calc itollo = 799 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 10000 ; calc itolla = 748 ; calc itollp = 748 ; calc itollo = 748 ; calc iyr = 2016 ; calc iproj = 755 ; calc ihov = 4
+sel tcoved-id = 14022 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 14023 ; calc itolla = 197 ; calc itollp = 197 ; calc itollo = 197 ; calc iyr = 2030 ; calc iproj = 0 ; calc ihov = 4
+sel tcoved-id = 14024 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 10232 ; calc itolla = 711 ; calc itollp = 711 ; calc itollo = 711 ; calc iyr = 2030 ; calc iproj = 0 ; calc ihov = 4
+sel tcoved-id = 31013 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 4132 ; calc itolla = 103 ; calc itollp = 103 ; calc itollo = 103 ; calc iyr = 2030 ; calc iproj = 217 ; calc ihov = 4
+sel tcoved-id = 10248 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 27767 ; calc itolla = 83 ; calc itollp = 83 ; calc itollo = 83 ; calc iyr = 2030 ; calc iproj = 217 ; calc ihov = 4
+sel tcoved-id = 10243 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 27657 ; calc itolla = 168 ; calc itollp = 168 ; calc itollo = 168 ; calc iyr = 2030 ; calc iproj = 217 ; calc ihov = 4
+sel tcoved-id = 9468 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9467 ; calc itolla = 131 ; calc itollp = 131 ; calc itollo = 131 ; calc iyr = 2015 ; calc iproj = 161 ; calc ihov = 4
+sel tcoved-id = 442 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 13245 ; calc itolla = 113 ; calc itollp = 113 ; calc itollo = 113 ; calc iyr = 2015 ; calc iproj = 161 ; calc ihov = 4
+sel tcoved-id = 9472 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 13154 ; calc itolla = 143 ; calc itollp = 143 ; calc itollo = 143 ; calc iyr = 2015 ; calc iproj = 161 ; calc ihov = 4
+sel tcoved-id = 9483 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9482 ; calc itolla = 103 ; calc itollp = 103 ; calc itollo = 103 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9484 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 27656 ; calc itolla = 151 ; calc itollp = 151 ; calc itollo = 151 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9485 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 27655 ; calc itolla = 123 ; calc itollp = 123 ; calc itollo = 123 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9509 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 27654 ; calc itolla = 135 ; calc itollp = 135 ; calc itollo = 135 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9132 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 10240 ; calc itolla = 147 ; calc itollp = 147 ; calc itollo = 147 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9540 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 10247 ; calc itolla = 103 ; calc itollp = 103 ; calc itollo = 103 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9519 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 3617 ; calc itolla = 102 ; calc itollp = 102 ; calc itollo = 102 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 7073 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 3591 ; calc itolla = 124 ; calc itollp = 124 ; calc itollo = 124 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 7074 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 4103 ; calc itolla = 130 ; calc itollp = 130 ; calc itollo = 130 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9143 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9144 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9135 ; calc itolla = 109 ; calc itollp = 109 ; calc itollo = 109 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 14429 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9133 ; calc itolla = 199 ; calc itollp = 199 ; calc itollo = 199 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 9146 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 2551 ; calc itolla = 132 ; calc itollp = 132 ; calc itollo = 132 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 10255 ; calc itolla = 42 ; calc itollp = 42 ; calc itollo = 42 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 33582 ; calc itolla = 0 ; calc itollp = 0 ; calc itollo = 0 ; calc iyr = 2020 ; calc iproj = 0 ; calc ihov = 4
+sel tcoved-id = 7132 ; calc itolla = 59 ; calc itollp = 59 ; calc itollo = 59 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 33583 ; calc itolla = 117 ; calc itollp = 117 ; calc itollo = 117 ; calc iyr = 2008 ; calc iproj = 116 ; calc ihov = 4
+sel tcoved-id = 10257 ; calc itolla = 43 ; calc itollp = 43 ; calc itollo = 43 ; calc iyr = 2008 ; calc iproj = 117 ; calc ihov = 4
+
+
+
+/*SR-241 TOLLWAY
+sel iproj = 135
+resel ifc = 1
+ca ihov = 4; ca uhov = 4;ca xhov = 4
+ca ispd = 65;ca uspd = 65;ca xspd = 65;
+ca itollo = %241opeaktoll%;ca itolla = %241peaktoll%;ca itollp = %241peaktoll%
+ca utollo = %241opeaktoll%;ca utolla = %241peaktoll%;ca utollp = %241peaktoll%
+ca xtollo = %241opeaktoll%;ca xtolla = %241peaktoll%;ca xtollp = %241peaktoll%
+
+/*SR-11 TOLLWAY
+sel iproj = 33 or iproj = 586
+resel ifc = 1
+ca ihov = 4; ca uhov = 4;ca xhov = 4
+ca ispd = 65;ca uspd = 65;ca xspd = 65;
+ca aspd = 0
+ca itollo = %11opeaktoll%;ca itolla = %11peaktoll%;ca itollp = %11peaktoll%
+ca utollo = %11opeaktoll%;ca utolla = %11peaktoll%;ca utollp = %11peaktoll%
+ca xtollo = %11opeaktoll%;ca xtolla = %11peaktoll%;ca xtollp = %11peaktoll%
+
+/*I-5 ORANGE COUNTY TOLLWAY (SR-78 TO ORANGE COUNTY)
+sel iproj = 614
+resel ifc = 1
+ca ihov = 4
+ca ispd = 65;ca uspd = 65;ca xspd = 65;
+ca itollo = %i5tollonlyop%;ca itolla = %i5tollonlyp%;ca itollp = %i5tollonlyp%
+  
+/*I-15 RIVERSIDE COUNTY TOLLWAY (SR-78 TO RIVERSIDE COUNTY)
+sel iproj = 613
+resel ifc = 1
+ca ihov = 4
+ca ispd = 65;ca uspd = 65;ca xspd = 65;
+ca itollo = %i15tollonlyop%;ca itolla = %i15tollonlyp%;ca itollp = %i15tollonlyp%
+
+
+/*SR-52 MANAGED LANES (SANTO RD TO SR-125)
+sel uproj = 604 
+resel ifc = 1
+ca ihov = 2
+ca utollo = %sr52mlopeaktoll%; ca utolla = %sr52mlpeaktoll%;ca utollp = %sr52mlpeaktoll%
+
+sel xproj = 605 
+resel ifc = 1
+ca xtollo = %sr52mlopeaktoll%; ca xtolla = %sr52mlpeaktoll%;ca xtollp = %sr52mlpeaktoll%
+
+
+/*I-805 MANAGED LANES (SR-905 TO I-5 NORTH)
+sel uproj = 326 or uproj = 327 or uproj = 328 or uproj = 329 or uproj = 381 or uproj = 492
+resel ifc = 1
+ca utollo = %i805mlopeaktoll%;ca utolla = %i805mlpeaktoll%;ca utollp = %i805mlpeaktoll%
+
+sel uproj = 608 or uproj = 330 or uproj = 385 or uproj = 641
+resel ifc = 1
+ca utollo = %i805mlopeaktoll%;ca utolla = %i805mlpeaktoll%;ca utollp = %i805mlpeaktoll%
+
+sel xproj = 608 or xproj = 330 or xproj = 385 or xproj = 492 or xproj = 641 or xproj = 638
+resel ifc = 1
+ca xtollo = %i805mlopeaktoll%;ca xtolla = %i805mlpeaktoll%;ca xtollp = %i805mlpeaktoll%
+
+
+/*I-5 NORTH COAST MANAGED LANES
+sel uproj = 349 or uproj = 320 or uproj = 319 or uproj = 295 or uproj = 395 or uproj = 639
+resel ifc = 1
+ca utollo = %i5mlopeaktoll%;ca utolla = %i5mlpeaktoll%;ca utollp = %i5mlpeaktoll%
+
+/*sel uproj = 640 or uproj = 549
+/*resel ifc = 1 
+/*ca utollo = %i5mlopeaktoll%;ca utolla = %i5mlpeaktoll%;ca utollp = %i5mlpeaktoll%
+
+/*sel xproj = 640 or xproj = 549
+/*resel ifc = 1 
+/*ca xtollo = %i5mlopeaktoll%;ca xtolla = %i5mlpeaktoll%;ca xtollp = %i5mlpeaktoll%
+
+
+/*I-15 EXPRESS LANES (1998-2012)
+sel uproj = 42
+resel ifc = 1
+resel nm cn 'SB'
+ca itolla = %i15xpresspeak%
+sel uproj = 42
+resel ifc = 1
+resel nm cn 'NB'
+ca itollp = %i15xpresspeak%;ca itollo = %i15xpressopeak%
+
+sel uproj = 42 
+resel ifc = 1
+ca utollo = %i15mlopeaktoll%;ca utolla = %i15mlpeaktoll%;ca utollp = %i15mlpeaktoll%
+
+sel iproj = 41 or iproj = 486
+resel ifc = 1 
+ca itollo = %i15mlopeaktoll%;ca itolla = %i15mlpeaktoll%;ca itollp = %i15mlpeaktoll%
+
+sel uproj = 486
+resel ifc = 1 
+ca utollo = %i15mlopeaktoll%;ca utolla = %i15mlpeaktoll%;ca utollp = %i15mlpeaktoll%
+
+sel uproj = 373
+resel ifc = 1 
+ca utollo = %i15mlopeaktoll%;ca utolla = %i15mlpeaktoll%;ca utollp = %i15mlpeaktoll%
+
+sel xproj = 373
+resel ifc = 1 
+ca xtollo = %i15mlopeaktoll%;ca xtolla = %i15mlpeaktoll%;ca xtollp = %i15mlpeaktoll%
+
+/*ALL 3+ HOT LANES FOR 2011 RTP
+sel uhov = 3 
+resel ufc = 1
+ca utollo = 10;ca utollp = 26;ca utolla = 26
+sel xhov = 3 
+resel xfc = 1
+ca xtollo = 10;ca xtollp = 26;ca xtolla = 26
+sel yhov = 3 
+resel yfc = 1
+ca ytollo = 10;ca ytollp = 26;ca ytolla = 26
+sel zhov = 3 
+resel zfc = 1
+ca ztollo = 10;ca ztollp = 26;ca ztolla = 26
+
+
+save
+q
+&ret

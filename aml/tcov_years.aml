@@ -1,0 +1,85 @@
+sel dyr gt 0; res dyr lt 2000; delete *\ no conflict with dprojs
+
+sel iyr lt 2000; resel uyr = 0; ca iyr = 2000 *\ no arcs with xyr,yyr, or zyr gt 0
+
+sel iyr lt 2000; resel uyr gt 2000; ca iyr = 2000 *\ no arcs with yyr or zyr gt 0
+
+sel iyr lt 2000; resel uyr gt 0; resel uyr le 2000; resel xyr = 0; ca iyr = 2000; ca uyr = 0 *\ no arcs with yyr or zyr gt 0
+	ca iproj = uproj; ca ijur = ujur; ca ifc = ufc; ca ihov = uhov; ca itruck = utruck; ca ispd = uspd; ca itspd = utspd; ca iway = uway; ca imed = umed; ca itollo = utollo; 
+	ca itolla = utolla; ca itollp = utollp; ca ablno = uablno; ca ablna = uablna; ca ablnp = uablnp; ca abau = uabau; ca abcnt = uabcnt; ca abtl = uabtl; ca abrl = uabrl; 
+	ca abll = uabll; ca balno = ubalno; ca balna = ubalna; ca balnp = ubalnp; ca baau = ubaau; ca bacnt = ubacnt; ca batl = ubatl; ca barl = ubarl; ca ball = uball;
+	ca uproj = 0; ca ujur = 0; ca ufc = 0; ca uhov = 0; ca utruck = 0; ca uspd = 0; ca utspd = 0; ca uway = 0; ca umed = 0; ca utollo = 0; ca utolla = 0; ca utollp = 0; ca uablno = 0;
+	ca uablna = 0; ca uablnp = 0; ca uabau = 0; ca uabcnt = 0; ca uabtl = 0; ca uabrl = 0; ca uabll = 0; ca ubalno = 0; ca ubalna = 0; ca ubalnp = 0; ca ubaau = 0; ca ubacnt = 0; ca ubatl = 0; 
+	ca ubarl = 0; ca uball = 0
+	
+sel iyr lt 2000; resel uyr gt 0; resel uyr le 2000; resel xyr ge 2000; *\ takes care of y values...no z values in this selection
+	ca iyr = 2000; ca uyr = xyr *\ no arcs with yyr or zyr gt 0
+	ca iproj = uproj; ca ijur = ujur; ca ifc = ufc; ca ihov = uhov; ca itruck = utruck; ca ispd = uspd; ca itspd = utspd; ca iway = uway; ca imed = umed; ca itollo = utollo; 
+	ca itolla = utolla; ca itollp = utollp; ca ablno = uablno; ca ablna = uablna; ca ablnp = uablnp; ca abau = uabau; ca abcnt = uabcnt; ca abtl = uabtl; ca abrl = uabrl; 
+	ca abll = uabll; ca balno = ubalno; ca balna = ubalna; ca balnp = ubalnp; ca baau = ubaau; ca bacnt = ubacnt; ca batl = ubatl; ca barl = ubarl; ca ball = uball;
+	ca uproj = xproj; ca ujur = xjur; ca ufc = xfc; ca uhov = xhov; ca utruck = xtruck; ca uspd = xspd; ca utspd = xtspd; ca uway = xway; ca umed = xmed; ca utollo = xtollo; ca utolla = xtolla; 
+	ca utollp = xtollp; ca uablno = xablno;	ca uablna = xablna; ca uablnp = xablnp; ca uabau = xabau; ca uabcnt = xabcnt; ca uabtl = xabtl; ca uabrl = xabrl; ca uabll = xabll; ca ubalno = xbalno; 		ca ubalna = xbalna; ca ubalnp = xbalnp; ca ubaau = xbaau; ca ubacnt = xbacnt; ca ubatl = xbatl;	ca ubarl = xbarl; ca uball = xball;
+	ca xproj = yproj; ca xjur = yjur; ca xfc = yfc; ca xhov = yhov; ca xtruck = ytruck; ca xspd = yspd; ca xtspd = ytspd; ca xway = yway; ca xmed = ymed; ca xtollo = ytollo; ca xtolla = ytolla;
+ 	ca xtollp = ytollp; ca xablno = yablno; ca xablna = yablna; ca xablnp = yablnp; ca xabau = yabau; ca xabcnt = yabcnt; ca xabtl = yabtl; ca xabrl = yabrl; ca xabll = yabll; ca xbalno = ybalno;
+	ca xbalna = ybalna; ca xbalnp = ybalnp; ca xbaau = ybaau; ca xbacnt = ybacnt; ca xbatl = ybatl; ca xbarl = ybarl; ca xball = yball
+	ca yproj = 0; ca yjur = 0; ca yfc = 0; ca yhov = 0; ca ytruck = 0; ca yspd = 0; ca ytspd = 0; ca yway = 0; ca ymed = 0; ca ytollo = 0; ca ytolla = 0; ca ytollp = 0; ca yablno = 0; 
+	ca yablna = 0; ca yablnp = 0; ca yabau = 0; ca yabcnt = 0; ca yabtl = 0; ca yabrl = 0; ca yabll = 0; ca ybalno = 0; ca ybalna = 0; ca ybalnp = 0; ca ybaau = 0; ca ybacnt = 0; 
+	ca ybatl = 0; ca ybarl = 0; ca yball = 0
+
+sel iyr lt 2000; resel uyr gt 0; resel uyr le 2000; resel xyr gt 0; resel xyr le 2000; resel yyr = 0; resel zyr = 0; ca iyr = 2000; ca uyr = 0; ca xyr = 0
+	ca iproj = xproj; ca ijur = xjur; ca ifc = xfc; ca ihov = xhov; ca itruck = xtruck; ca ispd = xspd; ca itspd = xtspd; ca iway = xway; ca imed = xmed; ca itollo = xtollo; 
+	ca itolla = xtolla; ca itollp = xtollp; ca ablno = xablno; ca ablna = xablna; ca ablnp = xablnp; ca abau = xabau; ca abcnt = xabcnt; ca abtl = xabtl; ca abrl = xabrl; 
+	ca abll = xabll; ca balno = xbalno; ca balna = xbalna; ca balnp = xbalnp; ca baau = xbaau; ca bacnt = xbacnt; ca batl = xbatl; ca barl = xbarl; ca ball = xball;
+	ca uproj = 0; ca ujur = 0; ca ufc = 0; ca uhov = 0; ca utruck = 0; ca uspd = 0; ca utspd = 0; ca uway = 0; ca umed = 0; ca utollo = 0; ca utolla = 0; ca utollp = 0; ca uablno = 0;
+	ca uablna = 0; ca uablnp = 0; ca uabau = 0; ca uabcnt = 0; ca uabtl = 0; ca uabrl = 0; ca uabll = 0; ca ubalno = 0; ca ubalna = 0; ca ubalnp = 0; ca ubaau = 0; ca ubacnt = 0; ca ubatl = 0; 
+	ca ubarl = 0; ca uball = 0; ca xproj = 0; ca xjur = 0; ca xfc = 0; ca xhov = 0; ca xtruck = 0; ca xspd = 0; ca xtspd = 0; ca xway = 0; ca xmed = 0; ca xtollo = 0; ca xtolla = 0; ca xtollp = 0; 	ca xablno = 0; ca xablna = 0; ca xablnp = 0; ca xabau = 0; ca xabcnt = 0; ca xabtl = 0; ca xabrl = 0; ca xabll = 0; ca xbalno = 0; ca xbalna = 0; ca xbalnp = 0; ca xbaau = 0; ca xbacnt = 0; 
+	ca xbatl = 0; ca xbarl = 0; ca xball = 0
+
+sel iyr lt 2000; resel uyr gt 0; resel uyr le 2000; resel xyr gt 0; resel xyr le 2000; resel yyr gt 2000; resel zyr = 0; ca iyr = 2000; ca uyr = yyr; ca xyr = 0; ca yyr = 0;
+	ca iproj = xproj; ca ijur = xjur; ca ifc = xfc; ca ihov = xhov; ca itruck = xtruck; ca ispd = xspd; ca itspd = xtspd; ca iway = xway; ca imed = xmed; ca itollo = xtollo; 
+	ca itolla = xtolla; ca itollp = xtollp; ca ablno = xablno; ca ablna = xablna; ca ablnp = xablnp; ca abau = xabau; ca abcnt = xabcnt; ca abtl = xabtl; ca abrl = xabrl; 
+	ca abll = xabll; ca balno = xbalno; ca balna = xbalna; ca balnp = xbalnp; ca baau = xbaau; ca bacnt = xbacnt; ca batl = xbatl; ca barl = xbarl; ca ball = xball;
+	ca uproj = yproj; ca ujur = yjur; ca ufc = yfc; ca uhov = yhov; ca utruck = ytruck; ca uspd = yspd; ca utspd = ytspd; ca uway = yway; ca umed = ymed; ca utollo = ytollo; ca utolla = ytolla; 
+	ca utollp = ytollp; ca uablno = yablno; ca uablna = yablna; ca uablnp = yablnp; ca uabau = yabau; ca uabcnt = yabcnt; ca uabtl = yabtl; ca uabrl = yabrl; ca uabll = yabll; ca ubalno = ybalno; 		ca ubalna = ybalna; ca ubalnp = ybalnp; ca ubaau = ybaau; ca ubacnt = ybacnt; ca ubatl = ybatl; ca ubarl = ybarl; ca uball = yball; ca xproj = 0; ca xjur = 0; ca xfc = 0; ca xhov = 0; 
+	ca xtruck = 0; ca xspd = 0; ca xtspd = 0; ca xway = 0; ca xmed = 0; ca xtollo = 0; ca xtolla = 0; ca xtollp = 0; ca xablno = 0; ca xablna = 0; ca xablnp = 0; ca xabau = 0; ca xabcnt = 0; 
+	ca xabtl = 0; ca xabrl = 0; ca xabll = 0; ca xbalno = 0; ca xbalna = 0; ca xbalnp = 0; ca xbaau = 0; ca xbacnt = 0; ca xbatl = 0; ca xbarl = 0; ca xball = 0;
+	ca yproj = 0; ca yjur = 0; ca yfc = 0; ca yhov = 0; ca ytruck = 0; ca yspd = 0; ca ytspd = 0; ca yway = 0; ca ymed = 0; ca ytollo = 0; ca ytolla = 0; ca ytollp = 0; ca yablno = 0; 
+	ca yablna = 0; ca yablnp = 0; ca yabau = 0; ca yabcnt = 0; ca yabtl = 0; ca yabrl = 0; ca yabll = 0; ca ybalno = 0; ca ybalna = 0; ca ybalnp = 0; ca ybaau = 0; ca ybacnt = 0; ca ybatl = 0;
+	ca ybarl = 0; ca yball = 0
+
+ef node
+sel iyr lt 2000; resel uyr = 0;
+calc iyr = 2000;
+
+sel iyr lt 2000; resel uyr gt 2000;
+calc iyr = 2000;
+
+sel iyr lt 2000; resel uyr gt 0; resel uyr le 2000; resel uproj gt 0;
+calc iproj = uproj; calc uproj = 0;
+
+sel iyr lt 2000; resel uyr gt 0; resel uyr le 2000; resel ujur gt 0;
+calc ijur = ujur; calc ujur = 0;
+
+sel iyr lt 2000; resel uyr gt 0; resel uyr le 2000; resel ucnt gt 0;
+calc icnt = ucnt; calc ucnt = 0;
+
+sel iyr lt 2000; resel uyr gt 0; resel uyr le 2000; resel utyr gt 0;
+calc ityr = utyr; calc utyr = 0;
+
+sel iyr lt 2000; resel uyr gt 0; resel uyr le 2000; resel ustop gt 0;
+calc istop = ustop; calc ustop = 0;
+
+sel iyr lt 2000; resel uyr gt 0; resel uyr le 2000; resel upark gt 0;
+calc ipark = upark; calc upark = 0;
+
+sel iyr lt 2000; resel uyr gt 0; resel uyr le 2000; resel udwell gt 0;
+calc idwell = udwell; calc udwell = 0;
+
+sel iyr lt 2000; resel uyr gt 0; resel uyr le 2000; resel utt gt 0;
+calc itt = utt; calc utt = 0;
+
+sel iyr lt 2000; resel uyr gt 0; resel uyr le 2000;
+calc iyr = 2000; calc uyr = 0
+
+
+

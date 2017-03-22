@@ -1,0 +1,20 @@
+&if [exists nodecov -cover] &then kill nodecov all
+&if [exists tapcov -cover] &then kill tapcov all
+nodepoint trcov nodecov
+reselect nodecov tapcov point
+resel istop > 3 and tap > 0
+[unquote ' ']
+n
+n
+&if [exists idcov -cover] &then kill idcov all
+identity tapcov prcov idcov point
+&if [exists tapcov -cover] &then kill tapcov all
+&data arc info
+ARC
+SEL IDCOV.PAT
+CA $COMMA-SWITCH = -1
+OUTPUT ..\tap.ptypenew INIT
+RESEL PTYPE > 0
+PRINT TAP,ISTOP,PRCOV-ID,PTYPE,TAZ,CAP,WKDIST
+Q STOP
+&END
